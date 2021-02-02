@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  database:
+    container_name: 'business-allocation'
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: business-allocation
+      POSTGRES_USER: admin
+    ports:
+      - "6666:5432"
+    restart: always
