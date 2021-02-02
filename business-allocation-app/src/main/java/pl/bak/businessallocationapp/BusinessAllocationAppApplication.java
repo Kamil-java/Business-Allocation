@@ -1,7 +1,9 @@
 package pl.bak.businessallocationapp;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class BusinessAllocationAppApplication {
@@ -10,4 +12,9 @@ public class BusinessAllocationAppApplication {
         SpringApplication.run(BusinessAllocationAppApplication.class, args);
     }
 
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 }

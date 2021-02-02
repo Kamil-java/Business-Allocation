@@ -1,18 +1,24 @@
 package pl.bak.businessallocationapp.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity(name = "User")
 @Table(
-        name = "app-user",
+        name = "app_user",
         uniqueConstraints = {
                 @UniqueConstraint(name = "app_user_email_unique", columnNames = "email"),
                 @UniqueConstraint(name = "app_user_username_unique", columnNames = "username")
         }
 )
-public class User {
+public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -69,7 +75,7 @@ public class User {
             nullable = false,
             columnDefinition = "DATE"
     )
-    private LocalDate birth_date;
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -106,22 +112,49 @@ public class User {
         this.email = email;
     }
 
+    @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public LocalDate getBirth_date() {
-        return birth_date;
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 
-    public void setBirth_date(LocalDate birth_date) {
-        this.birth_date = birth_date;
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
@@ -143,12 +176,15 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(birth_date, user.birth_date) && role == user.role;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email)
+                && Objects.equals(username, user.username) && Objects.equals(password, user.password)
+                && Objects.equals(birthDate, user.birthDate) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, birth_date, role);
+        return Objects.hash(id, firstName, lastName, email, username, password, birthDate, role);
     }
 
 
