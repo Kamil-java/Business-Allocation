@@ -78,7 +78,15 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(
+            name = "roles",
+            nullable = false
+    )
     private Role role;
+
+    public User() {
+        role = Role.ROLE_USER;
+    }
 
     public Long getId() {
         return id;
@@ -110,6 +118,16 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -147,16 +165,6 @@ public class User implements UserDetails {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
