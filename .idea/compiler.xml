@@ -10,6 +10,10 @@
         <module name="business-allocation-app" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="business-allocation-app" target="11" />
+      <module name="BusinessAllocation" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
