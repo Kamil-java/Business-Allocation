@@ -138,12 +138,14 @@ class UserServiceTest {
         given(userRepository.findById(1L)).willReturn(Optional.of(prepareUser()));
 
         //when
-        UserDto user = userService.updateUser(1L, prepareUserDto());
+        Optional<UserDto> user = userService.updateUser(1L, prepareUserDto());
 
         //then
+        assertThat(user.isPresent()).isTrue();
         assertThat(user)
                 .isNotNull()
                 .isNotSameAs(prepareUserDto())
+                .get()
                 .hasFieldOrProperty("username")
                 .hasFieldOrProperty("email")
                 .hasFieldOrProperty("password")

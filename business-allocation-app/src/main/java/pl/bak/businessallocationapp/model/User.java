@@ -6,9 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 @Entity(name = "User")
 @Table(
@@ -84,6 +82,11 @@ public class User implements UserDetails {
     )
     private Role role;
 
+    @ManyToMany(
+            cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE}
+    )
+    private Set<Skill> skills = new HashSet<>();
+
     public User() {
         role = Role.ROLE_USER;
     }
@@ -122,7 +125,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -179,21 +182,24 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public Set<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
-                && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email)
-                && Objects.equals(username, user.username) && Objects.equals(password, user.password)
-                && Objects.equals(birthDate, user.birthDate) && role == user.role;
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(birthDate, user.birthDate) && role == user.role && Objects.equals(skills, user.skills);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, birthDate, role);
+        return Objects.hash(id, firstName, lastName, email, username, password, birthDate, role, skills);
     }
-
-
 }

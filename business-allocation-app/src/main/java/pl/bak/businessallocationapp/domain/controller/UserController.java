@@ -1,4 +1,4 @@
-package pl.bak.businessallocationapp.domain;
+package pl.bak.businessallocationapp.domain.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +44,8 @@ public class UserController {
 
     @PutMapping("/update/{id}")
     public UserDto updateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) {
-        UserDto dto = userService.updateUser(id, userDto);
-        if (dto == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return dto;
+        return userService.updateUser(id, userDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")

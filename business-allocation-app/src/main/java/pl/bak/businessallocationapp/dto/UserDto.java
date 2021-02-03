@@ -2,17 +2,36 @@ package pl.bak.businessallocationapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class UserDto {
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
     private String username;
+
+    @NotBlank
+    @Size(min = 3, max = 23)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    @NotNull
+    @Past
     private LocalDate birthDate;
+
+    private Set<String> skills;
 
     public String getFirstName() {
         return firstName;
@@ -62,16 +81,11 @@ public class UserDto {
         this.birthDate = birthDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(firstName, userDto.firstName) && Objects.equals(lastName, userDto.lastName) && Objects.equals(email, userDto.email) && Objects.equals(username, userDto.username) && Objects.equals(password, userDto.password) && Objects.equals(birthDate, userDto.birthDate);
+    public Set<String> getSkills() {
+        return skills;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, email, username, password, birthDate);
+    public void setSkills(Set<String> skills) {
+        this.skills = skills;
     }
 }

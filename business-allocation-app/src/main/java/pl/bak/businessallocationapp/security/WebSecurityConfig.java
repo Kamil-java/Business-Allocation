@@ -28,10 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .orElseThrow(() -> new UsernameNotFoundException("User with " + username + " not exist"));
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -59,15 +59,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto updateUser(long id, UserDto userDto) {
+    public Optional<UserDto> updateUser(long id, UserDto userDto) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             modelMapper.map(userDto, user.get());
             userRepository.save(user.get());
-            return userDto;
+            return Optional.of(userDto);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Transactional
