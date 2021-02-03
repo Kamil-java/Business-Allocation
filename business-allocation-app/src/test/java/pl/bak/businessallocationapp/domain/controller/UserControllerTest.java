@@ -2,17 +2,25 @@ package pl.bak.businessallocationapp.domain.controller;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import pl.bak.businessallocationapp.domain.app.test.ControllerTestConfiguration;
 import pl.bak.businessallocationapp.domain.service.UserService;
 import pl.bak.businessallocationapp.dto.UserDto;
+import pl.bak.businessallocationapp.security.WebSecurityConfig;
+import pl.bak.businessallocationapp.security.jwt.JwtConfig;
 
+import javax.crypto.SecretKey;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @AutoConfigureRestDocs(outputDir = "documentation/endpoints/user")
+@AutoConfigureMockMvc
+@Import(ControllerTestConfiguration.class)
 class UserControllerTest {
 
     @MockBean

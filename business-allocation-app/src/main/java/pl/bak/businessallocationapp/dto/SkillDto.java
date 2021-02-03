@@ -1,5 +1,6 @@
 package pl.bak.businessallocationapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class SkillDto {
 
     private String seniorityLevel;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String description;
 
     public String getNameSkill() {

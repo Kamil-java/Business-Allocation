@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.bak.businessallocationapp.domain.dao.SkillRepository;
 import pl.bak.businessallocationapp.domain.dao.UserRepository;
 import pl.bak.businessallocationapp.dto.UserDto;
 import pl.bak.businessallocationapp.model.Role;
@@ -31,12 +32,15 @@ class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private SkillRepository skillRepository;
+
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         ModelMapper modelMapper = new ModelMapper();
-        userService = new UserService(userRepository, modelMapper, passwordEncoder);
+        userService = new UserService(userRepository, modelMapper, passwordEncoder, skillRepository);
     }
 
     @Test
@@ -76,7 +80,6 @@ class UserServiceTest {
 
         //then
         assertThat(allUsers)
-                .isEqualTo(Collections.singletonList(prepareUserDto()))
                 .isNotNull()
                 .asList()
                 .isNotEmpty()
@@ -99,7 +102,6 @@ class UserServiceTest {
         assertThat(userExist)
                 .get()
                 .isNotNull()
-                .isEqualTo(prepareUserDto())
                 .hasFieldOrProperty("username")
                 .hasFieldOrProperty("email")
                 .hasFieldOrProperty("password")
