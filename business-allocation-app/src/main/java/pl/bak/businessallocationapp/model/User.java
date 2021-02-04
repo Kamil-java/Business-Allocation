@@ -83,7 +83,7 @@ public class User implements UserDetails {
     private Role role;
 
     @ManyToMany(
-            cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE}
+            cascade = CascadeType.MERGE
     )
     private Set<Skill> skills = new HashSet<>();
 
