@@ -1,11 +1,9 @@
 package pl.bak.businessallocationapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +19,11 @@ public class TaskDto {
 
     private String description;
 
-    @NotNull
-    private boolean taskIsCompleted;
+    private boolean readyToBeChecked;
+
+    private boolean isCompleted;
+
+    private URL workEffectRepository;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -52,12 +53,12 @@ public class TaskDto {
         this.description = description;
     }
 
-    public boolean isTaskIsCompleted() {
-        return taskIsCompleted;
+    public boolean isReadyToBeChecked() {
+        return readyToBeChecked;
     }
 
-    public void setTaskIsCompleted(boolean taskIsCompleted) {
-        this.taskIsCompleted = taskIsCompleted;
+    public void setReadyToBeChecked(boolean readyToBeChecked) {
+        this.readyToBeChecked = readyToBeChecked;
     }
 
     public List<UserDto> getUserDtos() {
@@ -66,5 +67,21 @@ public class TaskDto {
 
     public void setUserDtos(List<UserDto> userDtos) {
         this.userDtos = userDtos;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public URL getWorkEffectRepository() {
+        return workEffectRepository;
+    }
+
+    public void setWorkEffectRepository(URL workEffectRepository) {
+        this.workEffectRepository = workEffectRepository;
     }
 }

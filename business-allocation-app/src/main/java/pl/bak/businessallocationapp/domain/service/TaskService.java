@@ -25,8 +25,8 @@ public class TaskService {
         this.userRepository = userRepository;
     }
 
-    public List<TaskDto> getAllNotCompletedTaskWithUser() {
-        List<Task> allTask = taskRepository.findAllTaskByCompletedFlag(false);
+    public List<TaskDto> getAllNotReadyToBeCheckedWithUser(boolean flag) {
+        List<Task> allTask = taskRepository.findAllTaskToBeCheckFlag(flag);
         List<TaskDto> taskDtos = new LinkedList<>();
 
         allTask.forEach(task -> {
@@ -52,15 +52,6 @@ public class TaskService {
         return taskDtos;
     }
 
-    public List<TaskDto> getAllCompletedTask(){
-        List<Task> allTask = taskRepository.findAllTaskByCompletedFlag(true);
-        List<TaskDto> taskDtos = new ArrayList<>();
-
-        allTask.forEach(task -> taskDtos.add(modelMapper.map(task, TaskDto.class)));
-
-        return taskDtos;
-    }
-
     public List<TaskDto> showAllTasksWithoutUser() {
         return taskRepository.findAll()
                 .stream()
@@ -68,6 +59,19 @@ public class TaskService {
                 .map(task -> modelMapper.map(task, TaskDto.class))
                 .collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public Optional<TaskDto> markTaskAsFullyReadyById(long id){
+        Optional<Task> taskById = taskRepository.findById(id);
+
+        if (taskById.isPresent()){
+            taskById.get().setCompleted(true);
+            taskRepository.save(taskById.get());
+            return Optional.of(modelMapper.map(taskById.get(), TaskDto.class));
+        }
+
+        return Optional.empty();
     }
 
     @Transactional
@@ -113,6 +117,4 @@ public class TaskService {
         }
         return Optional.empty();
     }
-
-
 }

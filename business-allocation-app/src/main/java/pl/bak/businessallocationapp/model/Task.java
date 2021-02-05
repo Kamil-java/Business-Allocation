@@ -1,6 +1,7 @@
 package pl.bak.businessallocationapp.model;
 
 import javax.persistence.*;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,16 +43,23 @@ public class Task {
     private String description;
 
     @Column(
-            name = "task_is_completed",
+            name = "ready_to_be_checked",
             columnDefinition = "BOOLEAN"
     )
-    private boolean taskIsCompleted;
+    private boolean readyToBeChecked = false;
 
     @Column(
-            name = "task_status",
+            name = "is_completed",
             columnDefinition = "BOOLEAN"
     )
-    private boolean taskStatus;
+    private boolean isCompleted = true;
+
+    @Column(
+            name = "url_to_project",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
+    private URL workEffectRepository;
 
     @ManyToMany(
             mappedBy = "tasks",
@@ -84,20 +92,12 @@ public class Task {
         this.description = description;
     }
 
-    public boolean isTaskIsCompleted() {
-        return taskIsCompleted;
+    public boolean isReadyToBeChecked() {
+        return readyToBeChecked;
     }
 
-    public void setTaskIsCompleted(boolean taskIsCompleted) {
-        this.taskIsCompleted = taskIsCompleted;
-    }
-
-    public boolean isTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(boolean taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setReadyToBeChecked(boolean taskIsCompleted) {
+        this.readyToBeChecked = taskIsCompleted;
     }
 
     public Set<User> getUsers() {
@@ -108,4 +108,19 @@ public class Task {
         this.users = users;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public URL getWorkEffectRepository() {
+        return workEffectRepository;
+    }
+
+    public void setWorkEffectRepository(URL workEffectRepository) {
+        this.workEffectRepository = workEffectRepository;
+    }
 }

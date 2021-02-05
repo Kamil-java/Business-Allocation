@@ -13,10 +13,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    @Query("SELECT t FROM Task t WHERE t.taskIsCompleted= :flag")
-    List<Task> findAllTaskByCompletedFlag(boolean flag);
+    @Query("SELECT t FROM Task t WHERE t.readyToBeChecked= :flag")
+    List<Task> findAllTaskToBeCheckFlag(boolean flag);
 
     Optional<Task> findTaskByTaskName(String taskName);
+
+    @Query("SELECT t FROM Task t WHERE t.isCompleted= :flag")
+    List<Task> findAllByStatusIsCompleted(boolean flag);
 
 
 }

@@ -19,9 +19,14 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/all/not/completed")
-    public List<TaskDto> allNotCompletedTask(){
-        return checkList(taskService.getAllNotCompletedTaskWithUser());
+    @GetMapping("/all/to/check")
+    public List<TaskDto> allCompletedOrNotTask(@RequestParam boolean isCompleted){
+        return checkList(taskService.getAllNotReadyToBeCheckedWithUser(isCompleted));
+    }
+
+    @GetMapping("/all/without/user")
+    public List<TaskDto> allTaskWithoutUser(){
+        return checkList(taskService.showAllTasksWithoutUser());
     }
 
     @PostMapping("/add")
@@ -31,14 +36,15 @@ public class TaskController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
     }
 
-    @GetMapping("/all/without/user")
-    public List<TaskDto> allTaskWithoutUser(){
-        return checkList(taskService.showAllTasksWithoutUser());
+    @PutMapping("/{id}/add/user")
+    public TaskDto updateTask(@PathVariable("id") long id,@RequestParam @Valid List<UserDto> userDtos){
+        return taskService.updateTask(id, userDtos)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{id}/add/user")
-    public TaskDto updateTask(@PathVariable("id") long id,@RequestBody @Valid List<UserDto> userDtos){
-        return taskService.updateTask(id, userDtos)
+    @PutMapping("/accept/{id}")
+    public TaskDto passTask(@PathVariable("id") long id){
+        return taskService.markTaskAsFullyReadyById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
@@ -48,6 +54,5 @@ public class TaskController {
         }
         return taskDtos;
     }
-
 
 }

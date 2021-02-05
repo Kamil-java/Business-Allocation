@@ -192,7 +192,7 @@ class UserServiceTest {
         user.setPassword("pass");
         user.setBirthDate(LocalDate.of(2000, 2, 1));
         user.setEmail("jon@gmail.com");
-        user.setRole(Role.ROLE_USER);
+        user.setRole(Role.ROLE_EMPLOYEE);
         return user;
     }
 

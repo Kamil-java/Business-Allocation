@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByUsername(String username);
 
-    @Query("SELECT DISTINCT au FROM User au JOIN au.tasks t WHERE t.taskIsCompleted=false")
+    @Query("SELECT DISTINCT au FROM User au JOIN au.tasks t WHERE t.readyToBeChecked=false")
     List<User> findAllByTasksIsFalse();
 
 }

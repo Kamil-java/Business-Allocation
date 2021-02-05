@@ -94,7 +94,7 @@ public class User implements UserDetails {
 
 
     public User() {
-        role = Role.ROLE_USER;
+        role = Role.ROLE_EMPLOYEE;
     }
 
     public Long getId() {
