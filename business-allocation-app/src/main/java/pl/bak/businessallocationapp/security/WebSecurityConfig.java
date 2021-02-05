@@ -63,55 +63,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
 
-
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/user/add")
-                .hasAnyAuthority(
-                        Role.ROLE_ADMIN.getAuthority(),
-                        Role.ROLE_BOSS.getAuthority(),
-                        Role.ROLE_EMPLOYEE.getAuthority()
-                )
-                .antMatchers(HttpMethod.DELETE, "/user/{id}")
-                .hasAnyRole(
-                        Role.ROLE_ADMIN.getAuthority(),
-                        Role.ROLE_BOSS.getAuthority()
-                )
-                .antMatchers(HttpMethod.PUT, "/user/update/{id}")
-                .hasAnyRole(
-                        Role.ROLE_ADMIN.getAuthority(),
-                        Role.ROLE_BOSS.getAuthority(),
-                        Role.ROLE_EMPLOYEE.getAuthority()
-                )
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
-
-        http
-                .addFilter(
-                        new JwtUsernameAndPasswordAuthFilter(
-                                authenticationManager(),
-                                jwtConfig, secretKey
-                        )
-                )
-                .addFilterAfter(
-                        new JwtTokenVerifier(secretKey, jwtConfig),
-                        JwtUsernameAndPasswordAuthFilter.class
-                )
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedEntryPoint());
-
-        http
-                .rememberMe()
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
-                .key(secretKey.toString())
-                .rememberMeParameter("remember-me")
-                .and()
-                .logout()
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("remember-me", "JSESSIONID").permitAll();
+//        http
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "/user/add")
+//                .hasAnyAuthority(
+//                        Role.ROLE_ADMIN.getAuthority(),
+//                        Role.ROLE_BOSS.getAuthority(),
+//                        Role.ROLE_EMPLOYEE.getAuthority()
+//                )
+//                .antMatchers(HttpMethod.DELETE, "/user/{id}")
+//                .hasAnyRole(
+//                        Role.ROLE_ADMIN.getAuthority(),
+//                        Role.ROLE_BOSS.getAuthority()
+//                )
+//                .antMatchers(HttpMethod.PUT, "/user/update/{id}")
+//                .hasAnyRole(
+//                        Role.ROLE_ADMIN.getAuthority(),
+//                        Role.ROLE_BOSS.getAuthority(),
+//                        Role.ROLE_EMPLOYEE.getAuthority()
+//                )
+//                .anyRequest().authenticated();
+//
+//
+//        http
+//                .addFilter(
+//                        new JwtUsernameAndPasswordAuthFilter(
+//                                authenticationManager(),
+//                                jwtConfig, secretKey
+//                        )
+//                )
+//                .addFilterAfter(
+//                        new JwtTokenVerifier(secretKey, jwtConfig),
+//                        JwtUsernameAndPasswordAuthFilter.class
+//                )
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(unauthorizedEntryPoint());
+//
+//        http
+//                .rememberMe()
+//                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+//                .key(secretKey.toString())
+//                .rememberMeParameter("remember-me")
+//                .and()
+//                .logout()
+//                .clearAuthentication(true)
+//                .invalidateHttpSession(true)
+//                .deleteCookies("remember-me", "JSESSIONID").permitAll();
     }
 }

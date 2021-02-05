@@ -87,6 +87,12 @@ public class User implements UserDetails {
     )
     private Set<Skill> skills = new HashSet<>();
 
+    @ManyToMany(
+            cascade = CascadeType.MERGE
+    )
+    private Set<Task> tasks = new HashSet<>();
+
+
     public User() {
         role = Role.ROLE_USER;
     }
@@ -190,16 +196,11 @@ public class User implements UserDetails {
         this.skills = skills;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(birthDate, user.birthDate) && role == user.role && Objects.equals(skills, user.skills);
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, birthDate, role, skills);
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 }

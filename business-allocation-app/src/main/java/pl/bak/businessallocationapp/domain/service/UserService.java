@@ -6,10 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bak.businessallocationapp.domain.dao.SkillRepository;
+import pl.bak.businessallocationapp.domain.dao.TaskRepository;
 import pl.bak.businessallocationapp.domain.dao.UserRepository;
 import pl.bak.businessallocationapp.dto.SkillDto;
 import pl.bak.businessallocationapp.dto.UserDto;
-import pl.bak.businessallocationapp.model.Skill;
 import pl.bak.businessallocationapp.model.User;
 
 import java.util.LinkedList;

@@ -1,12 +1,25 @@
 version: '3.1'
 services:
+  api:
+    container_name: 'business-allocation-app'
+    build: ./business-allocation-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
   database:
-    container_name: 'business-allocation'
+    container_name: 'business-allocation-db'
     image: postgres
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: business-allocation
       POSTGRES_USER: admin
+    volumes:
+      - type: volume
+        source: api-postgres-volume
+        target: /var/lib/postgresql/data
     ports:
       - "6666:5432"
     restart: always
+volumes:
+  api-postgres-volume:

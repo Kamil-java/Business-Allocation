@@ -1,11 +1,15 @@
 package pl.bak.businessallocationapp.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "Task")
 @Table(
-        name = "task"
+        name = "task",
+        uniqueConstraints = {
+        @UniqueConstraint(name = "task_task_name_unique", columnNames = "task_name")
+}
 )
 public class Task {
     @Id
@@ -37,10 +41,24 @@ public class Task {
     )
     private String description;
 
+    @Column(
+            name = "task_is_completed",
+            columnDefinition = "BOOLEAN"
+    )
+    private boolean taskIsCompleted;
+
+    @Column(
+            name = "task_status",
+            columnDefinition = "BOOLEAN"
+    )
+    private boolean taskStatus;
+
     @ManyToMany(
+            mappedBy = "tasks",
             cascade = CascadeType.MERGE
     )
-    private Set<User> user;
+    private Set<User> users = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -66,11 +84,28 @@ public class Task {
         this.description = description;
     }
 
-    public Set<User> getUser() {
-        return user;
+    public boolean isTaskIsCompleted() {
+        return taskIsCompleted;
     }
 
-    public void setUser(Set<User> user) {
-        this.user = user;
+    public void setTaskIsCompleted(boolean taskIsCompleted) {
+        this.taskIsCompleted = taskIsCompleted;
     }
+
+    public boolean isTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(boolean taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
 }

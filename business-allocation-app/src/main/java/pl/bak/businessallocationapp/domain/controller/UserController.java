@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.bak.businessallocationapp.domain.service.UserService;
 import pl.bak.businessallocationapp.dto.UserDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class UserController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@RequestBody UserDto userDto) {
+    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
         UserDto dto = userService.createUser(userDto);
         if (dto == null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public UserDto updateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable("id") long id, @RequestBody @Valid UserDto userDto) {
         return userService.updateUser(id, userDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
