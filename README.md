@@ -27,8 +27,6 @@ The project is implemented using:
 * PostgreSQL
 ### Build Tools
 * Docker
-* Jenkins
-* Flyway
 
 ## TODO
 * Add task management functionality
