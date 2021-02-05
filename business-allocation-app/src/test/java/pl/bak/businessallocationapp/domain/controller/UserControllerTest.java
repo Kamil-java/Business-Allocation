@@ -6,16 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.http.MediaType;;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.bak.businessallocationapp.domain.service.UserService;
 import pl.bak.businessallocationapp.dto.UserDto;
-import pl.bak.businessallocationapp.security.WebSecurityConfig;
 import pl.bak.businessallocationapp.security.jwt.JwtConfig;
 
 import javax.crypto.SecretKey;
@@ -33,9 +30,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest({UserController.class, WebSecurityConfig.class})
+@WebMvcTest(UserController.class)
 @AutoConfigureRestDocs(outputDir = "documentation/endpoints/user")
-@AutoConfigureMockMvc
 class UserControllerTest {
 
     @MockBean
@@ -52,6 +48,11 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @BeforeEach
+    public void init(){
+        objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
+    }
 
     @Test
     void getAllUser() throws Exception {
@@ -138,7 +139,6 @@ class UserControllerTest {
         given(userService.updateUser(1, prepareUserDto())).willReturn(Optional.of(prepareUserDto()));
 
         //when
-        objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
         String body = objectMapper.writeValueAsString(prepareUserDto());
         ResultActions perform = mockMvc.perform(put("/user/update/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -178,6 +178,7 @@ class UserControllerTest {
         //when
         ResultActions perform = mockMvc.perform(delete("/user/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
         );
 
         ResultActions notFound = mockMvc.perform(delete("/user/{id}", 2)

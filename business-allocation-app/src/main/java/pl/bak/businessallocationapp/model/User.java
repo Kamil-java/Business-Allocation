@@ -13,7 +13,8 @@ import java.util.*;
         name = "app_user",
         uniqueConstraints = {
                 @UniqueConstraint(name = "app_user_email_unique", columnNames = "email"),
-                @UniqueConstraint(name = "app_user_username_unique", columnNames = "username")
+                @UniqueConstraint(name = "app_user_username_unique", columnNames = "username"),
+                @UniqueConstraint(name = "app_user_pin_code_unique", columnNames = "pin_code"),
         }
 )
 public class User implements UserDetails {
@@ -75,6 +76,12 @@ public class User implements UserDetails {
     )
     private LocalDate birthDate;
 
+    @Column(
+            name = "pin_code",
+            nullable = false
+    )
+    private int pinCode;
+
     @Enumerated(EnumType.STRING)
     @Column(
             name = "roles",
@@ -87,8 +94,14 @@ public class User implements UserDetails {
     )
     private Set<Skill> skills = new HashSet<>();
 
+    @ManyToMany(
+            cascade = CascadeType.MERGE
+    )
+    private Set<Task> tasks = new HashSet<>();
+
+
     public User() {
-        role = Role.ROLE_USER;
+        role = Role.ROLE_EMPLOYEE;
     }
 
     public Long getId() {
@@ -190,16 +203,19 @@ public class User implements UserDetails {
         this.skills = skills;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(birthDate, user.birthDate) && role == user.role && Objects.equals(skills, user.skills);
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, username, password, birthDate, role, skills);
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public int getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(int pinCode) {
+        this.pinCode = pinCode;
     }
 }

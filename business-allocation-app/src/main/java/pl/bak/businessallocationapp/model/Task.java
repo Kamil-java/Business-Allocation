@@ -1,11 +1,16 @@
 package pl.bak.businessallocationapp.model;
 
 import javax.persistence.*;
+import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "Task")
 @Table(
-        name = "task"
+        name = "task",
+        uniqueConstraints = {
+        @UniqueConstraint(name = "task_task_name_unique", columnNames = "task_name")
+}
 )
 public class Task {
     @Id
@@ -37,10 +42,31 @@ public class Task {
     )
     private String description;
 
+    @Column(
+            name = "ready_to_be_checked",
+            columnDefinition = "BOOLEAN"
+    )
+    private boolean readyToBeChecked = false;
+
+    @Column(
+            name = "is_completed",
+            columnDefinition = "BOOLEAN"
+    )
+    private boolean isCompleted = true;
+
+    @Column(
+            name = "url_to_project",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
+    private URL workEffectRepository;
+
     @ManyToMany(
+            mappedBy = "tasks",
             cascade = CascadeType.MERGE
     )
-    private Set<User> user;
+    private Set<User> users = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -66,11 +92,35 @@ public class Task {
         this.description = description;
     }
 
-    public Set<User> getUser() {
-        return user;
+    public boolean isReadyToBeChecked() {
+        return readyToBeChecked;
     }
 
-    public void setUser(Set<User> user) {
-        this.user = user;
+    public void setReadyToBeChecked(boolean taskIsCompleted) {
+        this.readyToBeChecked = taskIsCompleted;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public URL getWorkEffectRepository() {
+        return workEffectRepository;
+    }
+
+    public void setWorkEffectRepository(URL workEffectRepository) {
+        this.workEffectRepository = workEffectRepository;
     }
 }

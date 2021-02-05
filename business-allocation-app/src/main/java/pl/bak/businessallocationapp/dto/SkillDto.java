@@ -2,14 +2,18 @@ package pl.bak.businessallocationapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 public class SkillDto {
+    @NotBlank
     private String nameSkill;
 
+    @NotBlank
     private String seniorityLevel;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @NotBlank
     private String description;
 
     public String getNameSkill() {

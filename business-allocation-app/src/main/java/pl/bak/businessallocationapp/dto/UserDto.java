@@ -1,8 +1,9 @@
 package pl.bak.businessallocationapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
+import pl.bak.businessallocationapp.domain.controller.TaskController;
+import pl.bak.businessallocationapp.domain.controller.UserController;
+import pl.bak.businessallocationapp.domain.service.TaskService;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+    private Long id;
 
     @NotBlank
     private String firstName;
@@ -37,15 +38,24 @@ public class UserDto {
     @Past
     private LocalDate birthDate;
 
+    @PositiveOrZero
+    @Min(1000)
+    @Max(9999)
+    private int pinCode;
+
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonPropertyOrder(alphabetic = true)
     private Set<SkillDto> skills;
 
-    public long getId() {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private Set<TaskDto> taskDtos;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -97,6 +107,14 @@ public class UserDto {
         this.birthDate = birthDate;
     }
 
+    public int getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(int pinCode) {
+        this.pinCode = pinCode;
+    }
+
     public Set<SkillDto> getSkills() {
         return skills;
     }
@@ -105,12 +123,20 @@ public class UserDto {
         this.skills = skills;
     }
 
+    public Set<TaskDto> getTaskDtos() {
+        return taskDtos;
+    }
+
+    public void setTaskDtos(Set<TaskDto> taskDtos) {
+        this.taskDtos = taskDtos;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto dto = (UserDto) o;
-        return id == dto.id && Objects.equals(firstName, dto.firstName) && Objects.equals(lastName, dto.lastName) && Objects.equals(email, dto.email) && Objects.equals(username, dto.username) && Objects.equals(password, dto.password) && Objects.equals(birthDate, dto.birthDate) && Objects.equals(skills, dto.skills);
+        return Objects.equals(id, dto.id) && Objects.equals(firstName, dto.firstName) && Objects.equals(lastName, dto.lastName) && Objects.equals(email, dto.email) && Objects.equals(username, dto.username) && Objects.equals(password, dto.password) && Objects.equals(birthDate, dto.birthDate) && Objects.equals(skills, dto.skills);
     }
 
     @Override
