@@ -1,11 +1,12 @@
 package pl.bak.businessallocationapp.domain.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bak.businessallocationapp.domain.service.TaskService;
 import pl.bak.businessallocationapp.dto.TaskDto;
-import pl.bak.businessallocationapp.dto.UserDto;
+import pl.bak.businessallocationapp.model.Task;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,8 +38,8 @@ public class TaskController {
     }
 
     @PutMapping("/{id}/add/user")
-    public TaskDto updateTask(@PathVariable("id") long id,@RequestParam @Valid List<UserDto> userDtos){
-        return taskService.updateTask(id, userDtos)
+    public TaskDto updateTask(@PathVariable("id") long id,@RequestParam List<Integer> pin){
+        return taskService.updateTask(id, pin)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
@@ -46,6 +47,20 @@ public class TaskController {
     public TaskDto passTask(@PathVariable("id") long id){
         return taskService.markTaskAsFullyReadyById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public void deleteTask(@PathVariable("id") long id){
+        Task task = taskService.getTaskById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!task.isCompleted()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+        taskService.removeCompletedTask(id);
     }
 
     private List<TaskDto> checkList(List<TaskDto> taskDtos) {

@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByUsername(String username);
+    Optional<User> findUserByPinCode(int pin);
 
     @Query("SELECT DISTINCT au FROM User au JOIN au.tasks t WHERE t.readyToBeChecked=false")
     List<User> findAllByTasksIsFalse();
