@@ -2,6 +2,7 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:6666/business-allocation
@@ -16,3 +17,18 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: springappowntest@gmail.com
+    password: ZAQ!2wsx
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport:
+          protocol: smtp
