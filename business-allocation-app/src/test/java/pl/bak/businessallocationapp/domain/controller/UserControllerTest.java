@@ -105,33 +105,6 @@ class UserControllerTest {
                 .andDo(print());
     }
 
-    @Test
-    void addUser() throws Exception {
-        //given
-        given(userService.createUser(any(UserDto.class))).willReturn(prepareUserDto());
-
-        //when
-        String body = objectMapper.writeValueAsString(prepareUserDto());
-        ResultActions perform = mockMvc.perform(post("/user/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .with(csrf())
-        );
-
-        //then
-        perform
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$.firstName").value("Jon"))
-                .andExpect(jsonPath("$.lastName").value("Smith"))
-                .andExpect(jsonPath("$.username").value("SJ"))
-                .andExpect(jsonPath("$.email").value("jon@gmail.com"))
-                .andExpect(jsonPath("$.birthDate").value("2000-02-01"))
-                .andDo(document("add-new-user"))
-                .andDo(print());
-
-    }
 
     @Test
     void updateUser() throws Exception {

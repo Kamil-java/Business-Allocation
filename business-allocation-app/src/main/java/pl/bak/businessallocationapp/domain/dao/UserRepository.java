@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pl.bak.businessallocationapp.model.Task;
 import pl.bak.businessallocationapp.model.User;
 
 import java.util.List;
@@ -25,8 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByTasksIsFalse();
 
     @Modifying
-    @Transactional
     @Query("UPDATE User SET enable = TRUE WHERE email = ?1")
-    int enableAppUser(String email);
+    void enableAppUser(String email);
 
 }

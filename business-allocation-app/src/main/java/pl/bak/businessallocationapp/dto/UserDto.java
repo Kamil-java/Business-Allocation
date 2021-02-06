@@ -41,6 +41,7 @@ public class UserDto {
     @PositiveOrZero
     @Min(1000)
     @Max(9999)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private int pinCode;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

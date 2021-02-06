@@ -33,16 +33,6 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@RequestBody @Valid UserDto userDto) {
-        UserDto dto = userService.createUser(userDto);
-        if (dto == null) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
-        return dto;
-    }
-
     @PutMapping("/update/{id}")
     public UserDto updateUser(@PathVariable("id") long id, @RequestBody @Valid UserDto userDto) {
         return userService.updateUser(id, userDto)

@@ -1,6 +1,8 @@
 package pl.bak.businessallocationapp.registration;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.bak.businessallocationapp.dto.UserDto;
 
 @RestController
 @RequestMapping("/registration")
@@ -12,8 +14,9 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request){
-        return registrationService.register(request);
+    @ResponseStatus(HttpStatus.CREATED)
+    public String register(@RequestBody UserDto userDto){
+        return registrationService.register(userDto);
     }
 
     @GetMapping("/confirm")

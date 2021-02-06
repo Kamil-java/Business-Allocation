@@ -26,7 +26,7 @@ public class ConfirmationTokenService {
     }
 
     @Transactional
-    public int serConfirmedAt(String token){
-        return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+    public void serConfirmedAt(String token){
+        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 }
