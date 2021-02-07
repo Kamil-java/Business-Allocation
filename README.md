@@ -1,8 +1,7 @@
 # Business-Allocation
 * [General info](#general-info)
 * [Technologies](#technologies)
-* [MVP](#mvp)
-* [TODO](#TODO)
+* [TODO](#todo)
 
 ## General info
 Business allocation is an application for managing both the company and the employees and users providing services in our company. The application allows you to set up an account by verifying your e-mail address and is based on JWT and OAuth 2.0 technology.
