@@ -6,21 +6,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import pl.bak.businessallocationapp.domain.app.test.ControllerTestConfig;
+import pl.bak.businessallocationapp.domain.app.test.TestBodyProvider;
 import pl.bak.businessallocationapp.domain.service.UserService;
 import pl.bak.businessallocationapp.dto.UserDto;
-import pl.bak.businessallocationapp.security.jwt.JwtConfig;
 
-import javax.crypto.SecretKey;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -30,18 +30,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(UserController.class)
 @AutoConfigureRestDocs(outputDir = "documentation/endpoints/user")
+@Import(ControllerTestConfig.class)
+@AutoConfigureMockMvc
 class UserControllerTest {
 
     @MockBean
     private UserService userService;
-
-    @MockBean
-    private SecretKey secretKey;
-
-    @MockBean
-    private JwtConfig jwtConfig;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -49,8 +46,11 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TestBodyProvider testBodyProvider;
+
     @BeforeEach
-    public void init(){
+    public void init() {
         objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
     }
 
@@ -105,33 +105,6 @@ class UserControllerTest {
                 .andDo(print());
     }
 
-    @Test
-    void addUser() throws Exception {
-        //given
-        given(userService.createUser(any(UserDto.class))).willReturn(prepareUserDto());
-
-        //when
-        String body = objectMapper.writeValueAsString(prepareUserDto());
-        ResultActions perform = mockMvc.perform(post("/user/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .with(csrf())
-        );
-
-        //then
-        perform
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$.firstName").value("Jon"))
-                .andExpect(jsonPath("$.lastName").value("Smith"))
-                .andExpect(jsonPath("$.username").value("SJ"))
-                .andExpect(jsonPath("$.email").value("jon@gmail.com"))
-                .andExpect(jsonPath("$.birthDate").value("2000-02-01"))
-                .andDo(document("add-new-user"))
-                .andDo(print());
-
-    }
 
     @Test
     void updateUser() throws Exception {
@@ -199,13 +172,6 @@ class UserControllerTest {
     }
 
     private UserDto prepareUserDto() {
-        UserDto userDto = new UserDto();
-        userDto.setFirstName("Jon");
-        userDto.setLastName("Smith");
-        userDto.setUsername("SJ");
-        userDto.setPassword("pass");
-        userDto.setBirthDate(LocalDate.of(2000, 2, 1));
-        userDto.setEmail("jon@gmail.com");
-        return userDto;
+        return testBodyProvider.prepareUserDto();
     }
 }

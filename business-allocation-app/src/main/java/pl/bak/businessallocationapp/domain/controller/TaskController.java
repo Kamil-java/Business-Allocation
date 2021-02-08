@@ -1,7 +1,6 @@
 package pl.bak.businessallocationapp.domain.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.bak.businessallocationapp.domain.service.TaskService;
@@ -21,7 +20,7 @@ public class TaskController {
     }
 
     @GetMapping("/all/to/check")
-    public List<TaskDto> allCompletedOrNotTask(@RequestParam boolean isCompleted){
+    public List<TaskDto> allCompletedOrNotCompletedTask(@RequestParam boolean isCompleted){
         return checkList(taskService.getAllNotReadyToBeCheckedWithUser(isCompleted));
     }
 
@@ -43,6 +42,12 @@ public class TaskController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @PutMapping("/ready/{id}")
+    public TaskDto markAsReady(@PathVariable("id") long id){
+        return taskService.markTaskAsReadyToCheckById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @PutMapping("/accept/{id}")
     public TaskDto passTask(@PathVariable("id") long id){
         return taskService.markTaskAsFullyReadyById(id)
@@ -60,7 +65,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
-        taskService.removeCompletedTask(id);
+        taskService.removeCompletedTaskById(id);
     }
 
     private List<TaskDto> checkList(List<TaskDto> taskDtos) {

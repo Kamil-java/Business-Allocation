@@ -89,6 +89,18 @@ public class User implements UserDetails {
     )
     private Role role;
 
+    @Column(
+            name = "locked",
+            nullable = false
+    )
+    private Boolean locked = true;
+
+    @Column(
+            name = "enable",
+            nullable = false
+    )
+    private Boolean enable = false;
+
     @ManyToMany(
             cascade = CascadeType.MERGE
     )
@@ -158,7 +170,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -168,7 +180,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enable;
     }
 
     public void setUsername(String username) {
@@ -218,4 +230,21 @@ public class User implements UserDetails {
     public void setPinCode(int pinCode) {
         this.pinCode = pinCode;
     }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
+
 }

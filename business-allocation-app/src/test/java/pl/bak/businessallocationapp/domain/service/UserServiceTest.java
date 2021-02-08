@@ -8,14 +8,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.bak.businessallocationapp.domain.app.test.TestBodyProvider;
 import pl.bak.businessallocationapp.domain.dao.SkillRepository;
 import pl.bak.businessallocationapp.domain.dao.UserRepository;
 import pl.bak.businessallocationapp.dto.UserDto;
-import pl.bak.businessallocationapp.model.Role;
 import pl.bak.businessallocationapp.model.User;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,8 +37,11 @@ class UserServiceTest {
 
     private UserService userService;
 
+    private TestBodyProvider testBodyProvider;
+
     @BeforeEach
     void setUp() {
+        testBodyProvider = new TestBodyProvider();
         ModelMapper modelMapper = new ModelMapper();
         userService = new UserService(userRepository, modelMapper, passwordEncoder, skillRepository);
     }
@@ -58,7 +61,6 @@ class UserServiceTest {
                 .isTrue();
         assertThat(jon)
                 .get()
-                .isEqualTo(prepareUser())
                 .hasFieldOrProperty("username")
                 .hasFieldOrProperty("email")
                 .hasFieldOrProperty("password")
@@ -118,7 +120,7 @@ class UserServiceTest {
         given(userRepository.save(any(User.class))).willReturn(prepareUser());
 
         //when
-        UserDto user = userService.createUser(prepareUserDto());
+        User user = userService.createUser(prepareUserDto());
 
         //then
         assertThat(user)
@@ -183,27 +185,23 @@ class UserServiceTest {
         assertThat(noExist).isFalse();
     }
 
-    private User prepareUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("Jon");
-        user.setLastName("Smith");
-        user.setUsername("SJ");
-        user.setPassword("pass");
-        user.setBirthDate(LocalDate.of(2000, 2, 1));
-        user.setEmail("jon@gmail.com");
-        user.setRole(Role.ROLE_EMPLOYEE);
-        return user;
+    @Test
+    void shouldEnableAccountIfEmailExist(){
+        //given
+        doNothing().when(userRepository).enableAppUser("jon@gmail.com");
+
+        //when
+        userService.enableAccount("jon@gmail.com");
+
+        //then
+        verify(userRepository).enableAppUser("jon@gmail.com");
     }
 
     private UserDto prepareUserDto(){
-        UserDto userDto = new UserDto();
-        userDto.setFirstName("Jon");
-        userDto.setLastName("Smith");
-        userDto.setUsername("SJ");
-        userDto.setPassword("pass");
-        userDto.setBirthDate(LocalDate.of(2000, 2, 1));
-        userDto.setEmail("jon@gmail.com");
-        return userDto;
+        return testBodyProvider.prepareUserDto();
+    }
+
+    private User prepareUser(){
+        return testBodyProvider.prepareUser();
     }
 }

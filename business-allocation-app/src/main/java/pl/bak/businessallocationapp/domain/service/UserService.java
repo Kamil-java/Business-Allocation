@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.bak.businessallocationapp.domain.dao.SkillRepository;
-import pl.bak.businessallocationapp.domain.dao.TaskRepository;
 import pl.bak.businessallocationapp.domain.dao.UserRepository;
 import pl.bak.businessallocationapp.dto.SkillDto;
 import pl.bak.businessallocationapp.dto.UserDto;
@@ -64,27 +63,32 @@ public class UserService {
     }
 
     @Transactional
-    public UserDto createUser(UserDto userDto) {
-        if (getUserByUsername(userDto.getUsername()).isPresent()) {
+    public User createUser(UserDto userDto) {
+        boolean userEmailExist = userRepository.findByEmail(userDto.getEmail())
+                .isPresent();
+
+        boolean userUsernameExist = getUserByUsername(userDto.getUsername())
+                .isPresent();
+
+        if (userUsernameExist || userEmailExist) {
             return null;
         }
+
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         User user = modelMapper.map(userDto, User.class);
         skillRepository.saveAll(user.getSkills());
-        User save = userRepository.save(user);
-        userDto.setId(save.getId());
-        return userDto;
+        return userRepository.save(user);
     }
 
     @Transactional
     public Optional<UserDto> updateUser(long id, UserDto userDto) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
+            userDto.setId(user.get().getId());
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             modelMapper.map(userDto, user.get());
-            User save = userRepository.save(user.get());
-            userDto.setId(save.getId());
+            userRepository.save(user.get());
             return Optional.of(userDto);
         }
         return Optional.empty();
@@ -93,6 +97,11 @@ public class UserService {
     @Transactional
     public void deleteUserById(long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void enableAccount(String email) {
+        userRepository.enableAppUser(email);
     }
 
     public boolean userExistById(long id) {

@@ -41,6 +41,7 @@ public class UserDto {
     @PositiveOrZero
     @Min(1000)
     @Max(9999)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private int pinCode;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -50,6 +51,21 @@ public class UserDto {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonIgnoreProperties(ignoreUnknown = true)
     private Set<TaskDto> taskDtos;
+
+    public UserDto() {
+    }
+
+    public UserDto(@NotBlank String firstName, @NotBlank String lastName,
+                   @NotBlank @Email String email, @NotBlank String username,
+                   @NotBlank @Size(min = 3, max = 23) String password,
+                   @NotNull @Past LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.birthDate = birthDate;
+    }
 
     public Long getId() {
         return id;

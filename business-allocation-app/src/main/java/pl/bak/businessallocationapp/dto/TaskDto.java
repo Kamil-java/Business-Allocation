@@ -19,8 +19,10 @@ public class TaskDto {
 
     private String description;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean readyToBeChecked;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private boolean isCompleted;
 
     private URL workEffectRepository;

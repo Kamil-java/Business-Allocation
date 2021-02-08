@@ -52,7 +52,7 @@ public class Task {
             name = "is_completed",
             columnDefinition = "BOOLEAN"
     )
-    private boolean isCompleted = true;
+    private boolean isCompleted = false;
 
     @Column(
             name = "url_to_project",
