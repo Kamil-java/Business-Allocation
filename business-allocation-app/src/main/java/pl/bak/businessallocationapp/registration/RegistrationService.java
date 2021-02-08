@@ -5,10 +5,12 @@ import pl.bak.businessallocationapp.domain.service.UserService;
 import pl.bak.businessallocationapp.dto.UserDto;
 import pl.bak.businessallocationapp.email.EmailSender;
 import pl.bak.businessallocationapp.email.templete.MessageTemplate;
+import pl.bak.businessallocationapp.model.User;
 import pl.bak.businessallocationapp.registration.token.domain.service.ConfirmationTokenService;
 import pl.bak.businessallocationapp.registration.token.model.ConfirmationToken;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class RegistrationService {
@@ -24,7 +26,7 @@ public class RegistrationService {
 
     public String register(UserDto userDto) {
 
-        String token = userService.singUp(userDto);
+        String token = singUp(userDto);
 
         String link = "http://localhost:8080/registration/confirm?token=" + token;
 
@@ -55,6 +57,25 @@ public class RegistrationService {
         userService.enableAccount(confirmationToken.getUser().getEmail());
 
         return "Confirmed";
+    }
+
+    public String singUp(UserDto userDto) {
+        User user = userService.createUser(userDto);
+
+        String token = UUID.randomUUID().toString();
+
+        LocalDateTime timeNow = LocalDateTime.now();
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                timeNow,
+                timeNow.plusMinutes(15),
+                user
+        );
+
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        return token;
     }
 
 

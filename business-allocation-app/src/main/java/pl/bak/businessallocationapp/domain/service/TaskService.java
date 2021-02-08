@@ -67,10 +67,23 @@ public class TaskService {
     }
 
     @Transactional
-    public Optional<TaskDto> markTaskAsFullyReadyById(long id) {
-        Optional<Task> taskById = taskRepository.findById(id);
+    public Optional<TaskDto> markTaskAsReadyToCheckById(long id){
+        Optional<Task> taskById = getTaskById(id);
 
         if (taskById.isPresent()) {
+            taskById.get().setReadyToBeChecked(true);
+            taskRepository.save(taskById.get());
+            return Optional.of(modelMapper.map(taskById.get(), TaskDto.class));
+        }
+
+        return Optional.empty();
+    }
+
+    @Transactional
+    public Optional<TaskDto> markTaskAsFullyReadyById(long id) {
+        Optional<Task> taskById = getTaskById(id);
+
+        if (taskById.isPresent() && taskById.get().isReadyToBeChecked()) {
             taskById.get().setCompleted(true);
             taskRepository.save(taskById.get());
             return Optional.of(modelMapper.map(taskById.get(), TaskDto.class));
@@ -133,7 +146,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void removeCompletedTask(long id){
+    public void removeCompletedTaskById(long id){
         taskRepository.deleteIfTaskIsCompleted(id);
     }
 }

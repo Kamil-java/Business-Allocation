@@ -2,27 +2,24 @@ package pl.bak.businessallocationapp.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.bak.businessallocationapp.domain.service.UserService;
-import pl.bak.businessallocationapp.model.Role;
 import pl.bak.businessallocationapp.security.jwt.JwtConfig;
-import pl.bak.businessallocationapp.security.jwt.JwtTokenVerifier;
-import pl.bak.businessallocationapp.security.jwt.JwtUsernameAndPasswordAuthFilter;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebSecurity
@@ -31,11 +28,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
+    private final PasswordEncoder passwordEncoder;
 
-    public WebSecurityConfig(UserService userService, SecretKey secretKey, JwtConfig jwtConfig) {
+    public WebSecurityConfig(UserService userService, SecretKey secretKey, JwtConfig jwtConfig, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.secretKey = secretKey;
         this.jwtConfig = jwtConfig;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -116,5 +115,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .clearAuthentication(true)
 //                .invalidateHttpSession(true)
 //                .deleteCookies("remember-me", "JSESSIONID").permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(userDetailsService());
+        return provider;
     }
 }

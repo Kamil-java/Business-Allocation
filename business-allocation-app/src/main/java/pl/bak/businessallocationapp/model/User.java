@@ -246,4 +246,5 @@ public class User implements UserDetails {
     public void setEnable(Boolean enable) {
         this.enable = enable;
     }
+
 }

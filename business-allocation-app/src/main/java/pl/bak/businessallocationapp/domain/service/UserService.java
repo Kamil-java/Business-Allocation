@@ -10,14 +10,10 @@ import pl.bak.businessallocationapp.domain.dao.UserRepository;
 import pl.bak.businessallocationapp.dto.SkillDto;
 import pl.bak.businessallocationapp.dto.UserDto;
 import pl.bak.businessallocationapp.model.User;
-import pl.bak.businessallocationapp.registration.token.domain.service.ConfirmationTokenService;
-import pl.bak.businessallocationapp.registration.token.model.ConfirmationToken;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,14 +22,12 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final SkillRepository skillRepository;
-    private final ConfirmationTokenService confirmationTokenService;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, SkillRepository skillRepository, ConfirmationTokenService confirmationTokenService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, SkillRepository skillRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.skillRepository = skillRepository;
-        this.confirmationTokenService = confirmationTokenService;
     }
 
     public Optional<User> getUserByUsername(String username) {
@@ -91,10 +85,10 @@ public class UserService {
     public Optional<UserDto> updateUser(long id, UserDto userDto) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
+            userDto.setId(user.get().getId());
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             modelMapper.map(userDto, user.get());
-            User save = userRepository.save(user.get());
-            userDto.setId(save.getId());
+            userRepository.save(user.get());
             return Optional.of(userDto);
         }
         return Optional.empty();
@@ -105,27 +99,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public String singUp(UserDto userDto) {
-        User user = createUser(userDto);
-
-        String token = UUID.randomUUID().toString();
-
-        LocalDateTime timeNow = LocalDateTime.now();
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                token,
-                timeNow,
-                timeNow.plusMinutes(15),
-                user
-        );
-
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-
-        return token;
-    }
-
     @Transactional
-    public void enableAccount(String email){
+    public void enableAccount(String email) {
         userRepository.enableAppUser(email);
     }
 
