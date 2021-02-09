@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
         maven "M3"
     }
 
@@ -12,19 +11,15 @@ pipeline {
                 steps{
                     sh "mvn clean compile"
                     }
+                    steps {
+                                                             sh "mvn test"
+                                                             }
             }
 
 
             }
         }
 
-    stages {
-        stage('Test') {
-            steps {
-                sh "mvn test"
-                }
 
-            }
-        }
     }
 }
