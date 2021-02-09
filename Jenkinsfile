@@ -8,9 +8,13 @@ pipeline {
 
     stages {
         stage('Build') {
-            steps sh "cd -a ./business-allocation-app"
+            dir('business-allocation-app'){
+                steps{
+                    sh "mvn clean compile"
+                    }
+            }
 
-            steps sh "mvn clean compile"
+
             }
         }
 
