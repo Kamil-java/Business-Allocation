@@ -11,22 +11,15 @@ pipeline {
                 steps{
                     sh "mvn clean compile"
                     }
+                    steps {
+                                                             sh "mvn test"
+                                                             }
             }
 
 
             }
         }
 
-    stages {
-        stage('Test') {
-        dir('business-allocation-app'){
-                        steps {
-                                        sh "mvn test"
-                                        }
-                    }
-           
 
-            }
-        }
     }
 }
