@@ -19,10 +19,10 @@ public class Skill {
     private String nameSkill;
 
     @Column(
-            name = "seniority_level",
-            columnDefinition = "TEXT"
+            name = "seniority_level"
     )
-    private String seniorityLevel;
+    @Enumerated(EnumType.STRING)
+    private SeniorityLevel seniorityLevel;
 
     @Column(
             name = "description",
@@ -46,11 +46,11 @@ public class Skill {
         this.nameSkill = nameSkill;
     }
 
-    public String getSeniorityLevel() {
+    public SeniorityLevel getSeniorityLevel() {
         return seniorityLevel;
     }
 
-    public void setSeniorityLevel(String seniorityLevel) {
+    public void setSeniorityLevel(SeniorityLevel seniorityLevel) {
         this.seniorityLevel = seniorityLevel;
     }
 

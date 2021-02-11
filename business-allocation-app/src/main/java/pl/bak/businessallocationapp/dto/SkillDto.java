@@ -1,6 +1,7 @@
 package pl.bak.businessallocationapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import pl.bak.businessallocationapp.model.SeniorityLevel;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -10,7 +11,7 @@ public class SkillDto {
     private String nameSkill;
 
     @NotBlank
-    private String seniorityLevel;
+    private SeniorityLevel seniorityLevel;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @NotBlank
@@ -24,11 +25,11 @@ public class SkillDto {
         this.nameSkill = nameSkill;
     }
 
-    public String getSeniorityLevel() {
+    public SeniorityLevel getSeniorityLevel() {
         return seniorityLevel;
     }
 
-    public void setSeniorityLevel(String seniorityLevel) {
+    public void setSeniorityLevel(SeniorityLevel seniorityLevel) {
         this.seniorityLevel = seniorityLevel;
     }
 

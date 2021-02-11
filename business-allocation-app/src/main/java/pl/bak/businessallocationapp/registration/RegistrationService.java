@@ -10,6 +10,8 @@ import pl.bak.businessallocationapp.registration.token.domain.service.Confirmati
 import pl.bak.businessallocationapp.registration.token.model.ConfirmationToken;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -34,7 +36,7 @@ public class RegistrationService {
 
         emailSender.send(userDto.getEmail(), messageTemplate);
 
-        return token;
+        return "Token was sent";
     }
 
     public String confirmToken(String token) {
@@ -54,12 +56,23 @@ public class RegistrationService {
 
         confirmationTokenService.serConfirmedAt(token);
 
-        userService.enableAccount(confirmationToken.getUser().getEmail());
+        User user = confirmationToken.getUser();
+
+        userService.getUserByUsername(user.getUsername()).ifPresent(u -> {
+            u.setEnable(true);
+            u.setLocked(false);
+            u.setPinCode(1000 + u.getId().intValue());
+            userService.addUser(u);
+        });
 
         return "Confirmed";
     }
 
     public String singUp(UserDto userDto) {
+        int code = getCode();
+
+        userDto.setPinCode(code);
+
         User user = userService.createUser(userDto);
 
         String token = UUID.randomUUID().toString();
@@ -76,6 +89,18 @@ public class RegistrationService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         return token;
+    }
+
+    private int getCode() {
+        Random random = new Random();
+        int code = random.nextInt(89999) + 10000;
+
+        Optional<User> userByPin = userService.getUserByPin(code);
+
+        while (userByPin.isPresent()) {
+            userByPin = userService.getUserByPin(code);
+        }
+        return code;
     }
 
 
