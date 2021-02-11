@@ -61,7 +61,6 @@ public class RegistrationService {
         userService.getUserByUsername(user.getUsername()).ifPresent(u -> {
             u.setEnable(true);
             u.setLocked(false);
-            u.setPinCode(1000 + u.getId().intValue());
             userService.addUser(u);
         });
 
@@ -69,10 +68,6 @@ public class RegistrationService {
     }
 
     public String singUp(UserDto userDto) {
-        int code = getCode();
-
-        userDto.setPinCode(code);
-
         User user = userService.createUser(userDto);
 
         String token = UUID.randomUUID().toString();
@@ -89,18 +84,6 @@ public class RegistrationService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
         return token;
-    }
-
-    private int getCode() {
-        Random random = new Random();
-        int code = random.nextInt(89999) + 10000;
-
-        Optional<User> userByPin = userService.getUserByPin(code);
-
-        while (userByPin.isPresent()) {
-            userByPin = userService.getUserByPin(code);
-        }
-        return code;
     }
 
 

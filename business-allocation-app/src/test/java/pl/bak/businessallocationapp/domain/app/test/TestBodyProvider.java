@@ -38,7 +38,6 @@ public class TestBodyProvider {
         userDto.setPassword("pass");
         userDto.setBirthDate(LocalDate.of(2000, 2, 1));
         userDto.setEmail("jon@gmail.com");
-        userDto.setPinCode(1234);
         return userDto;
     }
 

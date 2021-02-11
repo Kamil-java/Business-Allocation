@@ -39,10 +39,6 @@ public class UserDto {
     @Past
     private LocalDate birthDate;
 
-    @PositiveOrZero
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private int pinCode;
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonPropertyOrder(alphabetic = true)
     private Set<SkillDto> skills;
@@ -120,14 +116,6 @@ public class UserDto {
 
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
-    }
-
-    public int getPinCode() {
-        return pinCode;
-    }
-
-    public void setPinCode(int pinCode) {
-        this.pinCode = pinCode;
     }
 
     public Set<SkillDto> getSkills() {

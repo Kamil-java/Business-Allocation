@@ -162,10 +162,10 @@ class TaskServiceTest {
         given(taskRepository.findById(1L)).willReturn(Optional.of(testBodyProvider.prepareTask()));
         given(taskRepository.save(any())).willReturn(testBodyProvider.prepareTask());
         given(userRepository.save(any())).willReturn(new User());
-        given(userRepository.findUserByPinCode(1234)).willReturn(Optional.of(new User()));
+        given(userRepository.findUserByUsername("example-username")).willReturn(Optional.of(new User()));
 
         //when
-        Optional<TaskDto> taskDto = taskService.updateTask(1L, List.of(1234));
+        Optional<TaskDto> taskDto = taskService.updateTask(1L, List.of("example-username"));
 
         //then
         assertThat(taskDto.isPresent()).isTrue();

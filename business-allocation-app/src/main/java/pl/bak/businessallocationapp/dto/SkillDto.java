@@ -1,5 +1,6 @@
 package pl.bak.businessallocationapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import pl.bak.businessallocationapp.model.SeniorityLevel;
 
@@ -10,11 +11,10 @@ public class SkillDto {
     @NotBlank
     private String nameSkill;
 
-    @NotBlank
     private SeniorityLevel seniorityLevel;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @NotBlank
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String description;
 
     public String getNameSkill() {

@@ -104,10 +104,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<User> getUserByPin(int pin){
-        return userRepository.findByPinCode(pin);
-    }
-
     public boolean userExistById(long id) {
         return userRepository.existsById(id);
     }

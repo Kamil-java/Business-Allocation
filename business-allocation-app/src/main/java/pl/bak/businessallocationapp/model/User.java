@@ -14,7 +14,6 @@ import java.util.*;
         uniqueConstraints = {
                 @UniqueConstraint(name = "app_user_email_unique", columnNames = "email"),
                 @UniqueConstraint(name = "app_user_username_unique", columnNames = "username"),
-                @UniqueConstraint(name = "app_user_pin_code_unique", columnNames = "pin_code"),
         }
 )
 public class User implements UserDetails {
@@ -75,12 +74,6 @@ public class User implements UserDetails {
             columnDefinition = "DATE"
     )
     private LocalDate birthDate;
-
-    @Column(
-            name = "pin_code",
-            nullable = false
-    )
-    private int pinCode;
 
     @Enumerated(EnumType.STRING)
     @Column(
@@ -221,14 +214,6 @@ public class User implements UserDetails {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public int getPinCode() {
-        return pinCode;
-    }
-
-    public void setPinCode(int pinCode) {
-        this.pinCode = pinCode;
     }
 
     public Boolean getLocked() {

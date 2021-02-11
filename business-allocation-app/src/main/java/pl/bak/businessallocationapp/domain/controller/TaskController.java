@@ -37,8 +37,8 @@ public class TaskController {
     }
 
     @PutMapping("/{id}/add/user")
-    public TaskDto updateTask(@PathVariable("id") long id,@RequestParam List<Integer> pin){
-        return taskService.updateTask(id, pin)
+    public TaskDto updateTask(@PathVariable("id") long id,@RequestParam List<String> username){
+        return taskService.updateTask(id, username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

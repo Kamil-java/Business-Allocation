@@ -157,12 +157,14 @@ class TaskControllerTest {
     @Test
     void updateTask() throws Exception {
         //given
-        given(taskService.updateTask(1L, Arrays.asList(1234,5678))).willReturn(Optional.of(prepareTaskDto()));
+        String first = "first-username";
+        String second = "second-username";
+        given(taskService.updateTask(1L, Arrays.asList(first, second))).willReturn(Optional.of(prepareTaskDto()));
 
         //when
         ResultActions perform = mockMvc.perform(put("/task/{id}/add/user", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("pin", "1234,5678")
+                .param("username", first + ", " + second)
         );
 
         //then

@@ -18,10 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findUserByPinCode(int pin);
-
     @Query("SELECT DISTINCT au FROM User au JOIN au.tasks t WHERE t.readyToBeChecked=false")
     List<User> findAllByTasksIsFalse();
-
-    Optional<User> findByPinCode(int pin);
 }

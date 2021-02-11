@@ -62,12 +62,12 @@ public class TaskService {
 
     }
 
-    public Optional<Task> getTaskById(long id){
+    public Optional<Task> getTaskById(long id) {
         return taskRepository.findById(id);
     }
 
     @Transactional
-    public Optional<TaskDto> markTaskAsReadyToCheckById(long id){
+    public Optional<TaskDto> markTaskAsReadyToCheckById(long id) {
         Optional<Task> taskById = getTaskById(id);
 
         if (taskById.isPresent()) {
@@ -106,7 +106,7 @@ public class TaskService {
     }
 
     @Transactional
-    public Optional<TaskDto> updateTask(long id, List<Integer> pin) {
+    public Optional<TaskDto> updateTask(long id, List<String> usernames) {
         Optional<Task> task = taskRepository.findById(id);
 
         if (task.isPresent()) {
@@ -115,8 +115,8 @@ public class TaskService {
 
             TaskDto taskDto = modelMapper.map(task.get(), TaskDto.class);
 
-            for (Integer pinCode : pin) {
-                Optional<User> user = userRepository.findUserByPinCode(pinCode);
+            for (String username : usernames) {
+                Optional<User> user = userRepository.findUserByUsername(username);
 
                 if (user.isEmpty()) {
                     return Optional.empty();
@@ -146,7 +146,7 @@ public class TaskService {
     }
 
     @Transactional
-    public void removeCompletedTaskById(long id){
+    public void removeCompletedTaskById(long id) {
         taskRepository.deleteIfTaskIsCompleted(id);
     }
 }
