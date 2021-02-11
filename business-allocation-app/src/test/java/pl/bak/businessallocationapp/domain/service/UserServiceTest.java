@@ -185,18 +185,6 @@ class UserServiceTest {
         assertThat(noExist).isFalse();
     }
 
-    @Test
-    void shouldEnableAccountIfEmailExist(){
-        //given
-        doNothing().when(userRepository).enableAppUser("jon@gmail.com");
-
-        //when
-        userService.enableAccount("jon@gmail.com");
-
-        //then
-        verify(userRepository).enableAppUser("jon@gmail.com");
-    }
-
     private UserDto prepareUserDto(){
         return testBodyProvider.prepareUserDto();
     }

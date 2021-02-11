@@ -7,6 +7,7 @@ import pl.bak.businessallocationapp.domain.service.TaskService;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -39,8 +40,6 @@ public class UserDto {
     private LocalDate birthDate;
 
     @PositiveOrZero
-    @Min(1000)
-    @Max(9999)
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int pinCode;
 

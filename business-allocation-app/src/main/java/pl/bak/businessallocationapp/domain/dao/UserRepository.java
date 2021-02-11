@@ -23,8 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT DISTINCT au FROM User au JOIN au.tasks t WHERE t.readyToBeChecked=false")
     List<User> findAllByTasksIsFalse();
 
-    @Modifying
-    @Query("UPDATE User SET enable = TRUE WHERE email = ?1")
-    void enableAppUser(String email);
-
+    Optional<User> findByPinCode(int pin);
 }

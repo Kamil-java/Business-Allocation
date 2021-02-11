@@ -100,8 +100,12 @@ public class UserService {
     }
 
     @Transactional
-    public void enableAccount(String email) {
-        userRepository.enableAppUser(email);
+    public void addUser(User user){
+        userRepository.save(user);
+    }
+
+    public Optional<User> getUserByPin(int pin){
+        return userRepository.findByPinCode(pin);
     }
 
     public boolean userExistById(long id) {
